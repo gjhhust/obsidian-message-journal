@@ -1,96 +1,109 @@
-# Obsidian Sample Plugin
+# obsidian-message-journal
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+`obsidian-message-journal` 是一个 Obsidian 插件，用于自动解析 QQ 和微信消息，筛选重点联系人或关键词的消息，利用大语言模型自动生成每日总结，生成符合个人风格的日记内容。
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## 功能概述
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+- **消息解析**：自动从 QQ 和微信的消息数据库中提取最新消息。
+- **增量更新**：只处理前一天的新消息，避免重复解析。
+- **重点筛选**：按照预先配置的联系人或关键词筛选重要消息。
+- **内容归纳**：调用 OLLAMA 大语言模型对重要消息进行自动归纳。
+- **每日个人日记**：基于重要消息生成每日总结和个人日记内容。
+- **数据存储**：将日记和消息摘要存储为每日的 DB 数据库文件，方便查询和分析。
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## 安装
 
-## First time developing plugins?
+### 1. 手动安装
 
-Quick starting guide for new plugin devs:
+1. 克隆本仓库到本地插件目录：
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+   ```bash
+   git clone https://github.com/yourusername/obsidian-message-journal.git
+   ```
 
-## Releasing new releases
+2. 将该文件夹移动到 Obsidian 插件目录下的 `.obsidian/plugins` 文件夹。
+3. 在 Obsidian 中，前往 `Settings -> Community plugins` 并启用 `obsidian-message-journal` 插件。
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+### 2. 从 Obsidian 插件市场安装
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+如果此插件已发布到 Obsidian 社区插件市场，您可以直接从 Obsidian 中的插件市场进行安装。
 
-## Adding your plugin to the community plugin list
+## 配置
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+1. 在 Obsidian 中打开 `Settings -> Plugin Options`，找到 `obsidian-message-journal` 配置界面。
+2. 设置 QQ 和微信消息的存放目录。
+3. 输入重点关注的联系人名称或关键词，系统将自动筛选包含这些关键词或联系人的消息。
+4. 配置 OLLAMA 大语言模型的 API Key 或相关访问信息（若需要）。
 
-## How to use
+## 使用说明
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### 消息解析与日记生成
 
-## Manually installing the plugin
+- 安装并配置插件后，插件将自动在每日凌晨执行以下操作：
+  - 解析 QQ 和微信消息库，提取前一天的消息。
+  - 根据重点关注的联系人或关键词筛选出相关消息。
+  - 调用 OLLAMA 大语言模型对筛选后的消息进行归纳总结，生成简洁的每日重要消息摘要。
+  - 生成符合个人风格的日记内容，并存储为当天的 DB 数据库文件。
+  
+### 查看日记
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+- 您可以在 Obsidian 中通过每日的特定笔记（如“每日记录”）查看生成的日记内容。
+- 数据也存储在 DB 数据库文件中，便于后续查询和分析。
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+## 示例
 
-## Funding URL
+生成的日记示例如下：
 
-You can include funding URLs where people who use your plugin can financially support it.
+```
+## 2024-01-01 日记
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+### 重点消息摘要
+- 与 [好友1] 的交流：关于项目的最新进展和合作机会
+- [家人] 的消息：提醒注意健康和休息
+- 其他重要提醒：天气预报提示
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+### 今日总结
+今天的交流让我意识到新的工作机会以及家人对我的关心。整体感觉很充实。
 ```
 
-If you have multiple URLs, you can also do:
+## 常见问题
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+### 1. 插件无法解析消息文件？
+确保您已经正确配置了 QQ 和微信的消息存放目录，并确保 Obsidian 对该目录有读取权限。
 
-## API Documentation
+### 2. 日记内容未生成？
+请检查您的 OLLAMA 大语言模型 API Key 是否正确配置，或查看错误日志以获取更多信息。
 
-See https://github.com/obsidianmd/obsidian-api
+## 开发
+
+### 构建插件
+
+如果您希望对插件进行开发或修改：
+
+1. 克隆此仓库：
+   ```bash
+   git clone https://github.com/gjhhust/obsidian-message-journal.git
+   ```
+2. 安装依赖：
+   ```bash
+   npm install
+   ```
+3. 构建项目：
+   ```bash
+   npm run build
+   ```
+
+## 贡献
+
+欢迎提出 Issue 或 Pull Request！您的反馈将帮助我们不断改进这个插件。
+
+## 致谢
+本项目的知识基于一下项目获取，非常感谢:
+- QQ与微信消息解密与解析：
+   - [windows取证之导出微信&QQ聊天记录](https://saucer-man.com/information_security/1038.html)
+   - [解密qq数据库](https://github.com/saucer-man/qq_msg_decode?tab=readme-ov-file)
+- 接入ollama: 
+
+## 许可证
+
+本项目禁止商用 [MIT 许可证](LICENSE)。

@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "obsidian-message-journal",
+	"name": "Message Journal Plugin(消息日记)",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
+	"description": "Message Journal is an Obsidian plugin that extracts messages related to key contacts from configured QQ and WeChat message bases, summarizes important content using a large language model, and automatically generates daily message summaries and personal diaries.\n消息日志是一个 Obsidian 插件，它能从配置的 QQ 和微信消息库中提取与关键联系人相关的消息，利用大型语言模型总结重要内容，并自动生成每日消息摘要和个人日记。",
+	"author": "gjhhust",
+	"authorUrl": "https://github.com/gjhhust/obsidian-message-journal",
 	"fundingUrl": "https://obsidian.md/pricing",
 	"isDesktopOnly": false
 }
